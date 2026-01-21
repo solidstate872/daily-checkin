@@ -2,7 +2,7 @@ name: Daily Commit
 
 on:
   schedule:
-    # Runs every weekday at 09:00 UTC (11:00 South Africa time)
+    # Weekdays at 09:00 UTC (11:00 SA time)
     - cron: "0 9 * * 1-5"
   workflow_dispatch:
 
@@ -31,12 +31,28 @@ jobs:
             echo "SKIP=true" >> $GITHUB_ENV
           fi
 
+      - name: Random delay
+        if: env.SKIP != 'true'
+        run: |
+          DELAY=$((RANDOM % 2700))  # 0–45 minutes
+          sleep $DELAY
+
       - name: Make commit
         if: env.SKIP != 'true'
         run: |
+          MESSAGES=(
+            "Daily check-in"
+            "Routine update"
+            "Minor update"
+            "Progress update"
+            "Housekeeping"
+          )
+
+          MSG=${MESSAGES[$RANDOM % ${#MESSAGES[@]}]}
+
           echo "$(date)" >> log.txt
           git config user.name "Kobus Liebenberg"
           git config user.email "2386748+solidstate872@users.noreply.github.com"
           git add log.txt
-          git commit -m "Daily check-in"
+          git commit -m "$MSG"
           git push
