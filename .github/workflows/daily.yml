@@ -30,11 +30,12 @@ jobs:
           fi
 
       - name: Make commit
-        if: env.SKIP != 'true'
-        run: |
-          echo "$(date)" >> log.txt
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add log.txt
-          git commit -m "Daily check-in"
-          git push
+  if: env.SKIP != 'true'
+  run: |
+    echo "$(date)" >> log.txt
+    git config user.name "Kobus Liebenberg"
+    git config user.email "12345678+yourusername@users.noreply.github.com"
+    git add log.txt
+    git commit -m "Daily check-in"
+    git push
+
