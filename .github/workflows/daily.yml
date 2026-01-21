@@ -1,4 +1,4 @@
-name: Daily Commit
+name: Synth-a-Day Commit
 
 on:
   schedule:
@@ -41,11 +41,11 @@ jobs:
         if: env.SKIP != 'true'
         run: |
           MESSAGES=(
-            "Daily check-in"
-            "Routine update"
-            "Minor update"
-            "Progress update"
-            "Housekeeping"
+            "synth-a-day: log updated"
+            "synth-a-day: weekday entry recorded"
+            "synth-a-day: minor update"
+            "synth-a-day: log maintained"
+            "synth-a-day: activity recorded"
           )
 
           MSG=${MESSAGES[$RANDOM % ${#MESSAGES[@]}]}
