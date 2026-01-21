@@ -1,0 +1,40 @@
+name: Daily Commit
+
+on:
+  schedule:
+    # Runs every weekday at 09:00 UTC (adjust if needed)
+    - cron: "0 9 * * 1-5"
+  workflow_dispatch:
+
+jobs:
+  commit-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Check date rules
+        id: datecheck
+        run: |
+          TODAY=$(date +%m-%d)
+
+          # Mid-year break: June 15–30
+          if [[ "$TODAY" > "06-14" && "$TODAY" < "07-01" ]]; then
+            echo "SKIP=true" >> $GITHUB_ENV
+          fi
+
+          # End-year break: Dec 15–31
+          if [[ "$TODAY" > "12-14" ]]; then
+            echo "SKIP=true" >> $GITHUB_ENV
+          fi
+
+      - name: Make commit
+        if: env.SKIP != 'true'
+        run: |
+          echo "$(date)" >> log.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add log.txt
+          git commit -m "Daily check-in"
+          git push
